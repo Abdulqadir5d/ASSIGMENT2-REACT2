@@ -106,11 +106,11 @@ const StudentGrader = ({ students }) => {
 
               {/* Display Details */}
               <div style={styles.detailRow}>
-                <span>**Raw Scores:**</span>
+                <span>Raw Scores:</span>
                 <span>{student.scores.join(', ')}</span>
               </div>
               <div style={styles.detailRow}>
-                <span>**Average Score:**</span>
+                <span>Average Score:</span>
                 <span>{roundedAverage}</span>
               </div>
               
@@ -118,13 +118,13 @@ const StudentGrader = ({ students }) => {
 
               {/* Requirement 3: Print Grade */}
               <div style={styles.detailRow}>
-                <span>**Final Grade:**</span>
+                <span>Final Grade:</span>
                 <span style={styles.gradeSpan(isFailing)}>{grade}</span>
               </div>
               
               {/* Requirement 2: Fail Status */}
               <div style={styles.detailRow}>
-                <span>**Overall Status:**</span>
+                <span>Status:</span>
                 <span style={styles.statusSpan(isFailing)}>{status}</span>
               </div>
             </div>
