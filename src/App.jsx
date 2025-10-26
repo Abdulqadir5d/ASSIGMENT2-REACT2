@@ -1,91 +1,136 @@
 import React from 'react';
 
-// --- 1. Grading Logic Function ---
-/**
- * Calculates the final grade and status for a student based on the criteria.
- * @param {number} average - The student's average score.
- * @returns {{grade: string, status: string}}
- */
+// --- Global Styles for Enhanced UI ---
+const styles = {
+  container: {
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    maxWidth: '800px',
+    margin: '30px auto',
+    padding: '20px',
+    borderRadius: '12px',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#fff',
+  },
+  header: {
+    textAlign: 'center',
+    color: '#333',
+    marginBottom: '30px',
+    borderBottom: '3px solid #007bff',
+    paddingBottom: '10px',
+  },
+  studentBlock: {
+    padding: '15px',
+    borderRadius: '8px',
+    marginBottom: '10px',
+    transition: 'background-color 0.3s ease',
+  },
+  pass: {
+    backgroundColor: '#e6ffed', // Light Green
+    border: '1px solid #00c853',
+  },
+  fail: {
+    backgroundColor: '#ffeded', // Light Red
+    border: '2px solid #ff4444',
+  },
+  hrTag: {
+    border: 'none',
+    borderTop: '1px dashed #ccc',
+    margin: '20px 0',
+  },
+  detailRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '5px 0',
+  },
+  gradeSpan: (isFailing) => ({
+    fontWeight: '700',
+    fontSize: '1.2em',
+    padding: '2px 8px',
+    borderRadius: '4px',
+    color: isFailing ? '#fff' : '#000',
+    backgroundColor: isFailing ? '#ff4444' : '#ffc107',
+  }),
+  statusSpan: (isFailing) => ({
+    fontWeight: '600',
+    color: isFailing ? '#ff4444' : '#00c853',
+  }),
+};
+
+// --- Grading Logic ---
 const calculateGradeAndStatus = (average) => {
   let grade;
   let status;
 
-  // Requirement 3: Grade assignment logic
-  if (average >= 90) {
-    grade = 'A';
-    status = 'Pass';
-  } else if (average >= 80) {
-    grade = 'B';
-    status = 'Pass';
-  } else if (average >= 70) {
-    grade = 'C';
-    status = 'Pass';
-  } else if (average >= 60) {
-    grade = 'D';
-    status = 'Pass';
-  } else if (average >= 50) {
-    grade = 'E';
-    status = 'Pass';
-  } else {
-    grade = 'F';
-    // Requirement 2: Complete Fail component/status
-    status = 'Fail ❌';
+  if (average >= 90) { grade = 'A'; status = 'Pass'; } 
+  else if (average >= 80) { grade = 'B'; status = 'Pass'; } 
+  else if (average >= 70) { grade = 'C'; status = 'Pass'; } 
+  else if (average >= 60) { grade = 'D'; status = 'Pass'; } 
+  else if (average >= 50) { grade = 'E'; status = 'Pass'; } 
+  else { 
+    grade = 'F'; 
+    status = 'Fail ❌'; // Requirement 2: Fail component
   }
 
   return { grade, status };
 };
 
-// --- 2. Main React Component ---
-/**
- * A React component to display and grade student results.
- * @param {Object[]} students - Array of student objects: { name: string, scores: number[] }
- */
+// --- Main Component ---
 const StudentGrader = ({ students }) => {
 
   if (!students || students.length === 0) {
-    return <p>No student data provided to the grader.</p>;
+    return <div style={styles.container}><p>No student data provided.</p></div>;
   }
 
   return (
-    <div style={{ padding: '20px', border: '1px solid #ccc' }}>
-      <h2>Student Grade Report</h2>
+    <div style={styles.container}>
+      <h2 style={styles.header}>Student Grade Report Card</h2>
       
       {students.map((student, index) => {
-        // Calculate average score
+        // Calculations
         const totalScore = student.scores.reduce((sum, score) => sum + score, 0);
         const averageScore = totalScore / student.scores.length;
         const roundedAverage = averageScore.toFixed(1);
 
-        // Calculate grade and status
+        // Grading
         const { grade, status } = calculateGradeAndStatus(averageScore);
-
         const isFailing = status.includes('Fail');
+        
+        // Dynamic block style based on status
+        const blockStyle = isFailing ? styles.fail : styles.pass;
 
         return (
-          // Using a React fragment to group the student's output and the HR tag
           <React.Fragment key={index}>
-            <div 
-              style={{ 
-                padding: '10px', 
-                marginBottom: '10px', 
-                backgroundColor: isFailing ? '#ffe0e0' : '#f9f9f9',
-                border: isFailing ? '2px solid red' : '1px solid #ddd',
-                borderRadius: '5px'
-              }}
-            >
-              <h3>{student.name}</h3>
-              <p>Scores: **{student.scores.join(', ')}**</p>
-              <p>Average Score: **{roundedAverage}**</p>
+            
+            <div style={{ ...styles.studentBlock, ...blockStyle }}>
+              <h3 style={{ margin: '0 0 10px 0', color: isFailing ? '#b71c1c' : '#004d40' }}>{student.name}</h3>
+
+              {/* Display Details */}
+              <div style={styles.detailRow}>
+                <span>**Raw Scores:**</span>
+                <span>{student.scores.join(', ')}</span>
+              </div>
+              <div style={styles.detailRow}>
+                <span>**Average Score:**</span>
+                <span>{roundedAverage}</span>
+              </div>
               
+              <hr style={{ margin: '10px 0', border: 'none', borderTop: '1px solid #ddd' }} />
+
               {/* Requirement 3: Print Grade */}
-              <p>Final Grade: <span style={{ fontWeight: 'bold', color: isFailing ? 'red' : 'green' }}>{grade}</span></p>
+              <div style={styles.detailRow}>
+                <span>**Final Grade:**</span>
+                <span style={styles.gradeSpan(isFailing)}>{grade}</span>
+              </div>
               
-              {/* Requirement 2: Fail component/status */}
-              <p>Status: <span style={{ fontWeight: 'bold' }}>{status}</span></p>
+              {/* Requirement 2: Fail Status */}
+              <div style={styles.detailRow}>
+                <span>**Overall Status:**</span>
+                <span style={styles.statusSpan(isFailing)}>{status}</span>
+              </div>
             </div>
             
             {/* Requirement 1: hr (tag) after each result, except the last one */}
-            {index < students.length - 1 && <hr style={{ borderTop: '1px dashed #bbb' }} />}
+            {index < students.length - 1 && <hr style={styles.hrTag} />}
           </React.Fragment>
         );
       })}
@@ -93,21 +138,20 @@ const StudentGrader = ({ students }) => {
   );
 };
 
-// --- Example Usage Component ---
-const App = () => {
-    const sampleStudents = [
-        { name: 'Alice Smith', scores: [95, 88, 92] },   // Average 91.7 -> A (Pass)
-        { name: 'Bob Johnson', scores: [75, 80, 78] },   // Average 77.7 -> C (Pass)
-        { name: 'Charlie Brown', scores: [55, 62, 58] }, // Average 58.3 -> E (Pass)
-        { name: 'Diana Prince', scores: [40, 45, 30] },  // Average 38.3 -> F (Fail)
-    ];
+// --- Example Data and App Wrapper ---
+const sampleStudents = [
+    { name: 'Alice Smith', scores: [95, 88, 92] },   // A
+    { name: 'Bob Johnson', scores: [75, 80, 78] },   // C
+    { name: 'Charlie Brown', scores: [55, 62, 58] }, // E
+    { name: 'Diana Prince', scores: [40, 45, 30] },  // F (Fail)
+    { name: 'Eve Adams', scores: [65, 70, 68] },     // D
+];
 
-    return (
-        <div style={{ fontFamily: 'Arial, sans-serif' }}>
-            <StudentGrader students={sampleStudents} />
-        </div>
-    );
-}
+const App = () => (
+    <div style={{ minHeight: '100vh', backgroundColor: '#f4f7f6' }}>
+        <StudentGrader students={sampleStudents} />
+    </div>
+);
 
 export default App;
 
