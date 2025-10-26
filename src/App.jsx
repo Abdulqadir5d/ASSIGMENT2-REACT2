@@ -140,11 +140,11 @@ const StudentGrader = ({ students }) => {
 
 // --- Example Data and App Wrapper ---
 const sampleStudents = [
-    { name: 'Alice Smith', scores: [95, 88, 92] },   // A
-    { name: 'Bob Johnson', scores: [75, 80, 78] },   // C
-    { name: 'Charlie Brown', scores: [55, 62, 58] }, // E
-    { name: 'Diana Prince', scores: [40, 45, 30] },  // F (Fail)
-    { name: 'Eve Adams', scores: [65, 70, 68] },     // D
+    { name: 'Asad', scores: [95, 88, 92] },   // A
+    { name: 'Bilal', scores: [75, 80, 78] },   // C
+    { name: 'Jabbar', scores: [55, 62, 58] }, // E
+    { name: 'Danial', scores: [40, 45, 30] },  // F (Fail)
+    { name: 'Adanan', scores: [65, 70, 68] },     // D
 ];
 
 const App = () => (
